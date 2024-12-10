@@ -38,10 +38,12 @@ export function PresentationForm({
                 <div className="text-sm text-muted-foreground">
                   {slide.object_id}
                 </div>
-                <RedirectImage
-                  src={slide.thumbnail_url}
-                  alt={`slide ${slide.object_id} thumbnail`}
-                />
+                {slide.thumbnail_url && (
+                  <RedirectImage
+                    src={slide.thumbnail_url}
+                    alt={`slide ${slide.object_id} thumbnail`}
+                  />
+                )}
                 <div className="text-sm text-muted-foreground">
                   {slide.text}
                 </div>

@@ -11,6 +11,7 @@
     "productAttributes": "Atributy produktů",
     "answers": "Odpovědi",
     "users": "Uživatelé",
+    "presentations": "Prezentace",
     "account": {
       "title": "Účet",
       "profile": "Profil",
@@ -71,7 +72,13 @@
       "goToFirstPage": "Přejít na první stránku",
       "goToPreviousPage": "Přejít na předchozí stránku",
       "goToNextPage": "Přejít na další stránku",
-      "goToLastPage": "Přejít na poslední stránku"
+      "goToLastPage": "Přejít na poslední stránku",
+      "texts": {
+        "openMenu": "Otevřít menu",
+        "actions": "Akce",
+        "update": "Upravit",
+        "delete": "Smazat"
+      }
     }
   },
   "questions": {
@@ -384,6 +391,19 @@
     "messages": {
       "updated": "Atribut produktu byl aktualizován",
       "deleted": "Atribut produktu byl smazán"
+    }
+  },
+  "presentations": {
+    "listing": {
+      "title": "Prezentace",
+      "description": "Správa prezentací",
+      "addNew": "Přidat novou prezentaci",
+      "vectorSearch": "Hledat podle obsahu",
+      "textSearch": "Hledat podle názvu"
+    },
+    "form": {
+      "title": "Detail prezentace",
+      "description": "Zobrazit detail prezentace a slidy"
     }
   }
 }

@@ -1,32 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Active, DataRef, Over } from "@dnd-kit/core";
-import { ColumnDragData } from "@/src/app/[locale]/(dashboard)/kanban/_components/board-column";
-import { TaskDragData } from "@/src/app/[locale]/(dashboard)/kanban/_components/task-card";
-import { PlanWithProduct } from "./stripe";
-
-type DraggableData = ColumnDragData | TaskDragData;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function hasDraggableData<T extends Active | Over>(
-  entry: T | null | undefined,
-): entry is T & {
-  data: DataRef<DraggableData>;
-} {
-  if (!entry) {
-    return false;
-  }
-
-  const data = entry.data.current;
-
-  if (data?.type === "Column" || data?.type === "Task") {
-    return true;
-  }
-
-  return false;
 }
 
 export function formatBytes(
@@ -61,22 +37,4 @@ export const formatPlanPrice = (
     style: "currency",
     currency,
   }).format(price);
-};
-
-export const getPlanRange = (
-  plan: PlanWithProduct,
-): { from: number; to: number } | null => {
-  const borderLines = {
-    from: plan.product.metadata?.["from"] ?? null,
-    to: plan.product.metadata?.["to"] ?? null,
-  };
-
-  if (!borderLines.from || !borderLines.to) {
-    return null;
-  }
-
-  return {
-    from: Number(borderLines.from),
-    to: Number(borderLines.to),
-  };
 };

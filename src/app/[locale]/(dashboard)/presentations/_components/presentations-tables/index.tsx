@@ -20,6 +20,8 @@ export default function PresentationsTable({
     resetFilters,
     searchQuery,
     setPage,
+    vectorQuery,
+    setVectorQuery,
     setSearchQuery,
   } = usePresentationsTableFilters();
 
@@ -31,6 +33,12 @@ export default function PresentationsTable({
           searchKey="name"
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          setPage={setPage}
+        />
+        <DataTableSearch
+          searchKey="vector"
+          searchQuery={vectorQuery}
+          setSearchQuery={setVectorQuery}
           setPage={setPage}
         />
         {/* <DataTableFilterBox

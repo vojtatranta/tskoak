@@ -14,6 +14,7 @@ export const searchParams = {
   q: parseAsString,
   categoryId: parseAsInteger,
   quizId: parseAsString,
+  v: parseAsString,
   test: parseAsBoolean.withDefault(false),
   gender: parseAsString,
   categories: parseAsString,

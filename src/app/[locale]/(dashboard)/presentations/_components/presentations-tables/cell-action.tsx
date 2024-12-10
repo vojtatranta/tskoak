@@ -1,5 +1,6 @@
 "use client";
 import { useSupabase } from "@/lib/supabase-client";
+import { Presentation } from "@/lib/supabase-server";
 import { AlertModal } from "@/web/components/modal/alert-modal";
 import { Button } from "@/web/components/ui/button";
 import {
@@ -15,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface CellActionProps {
-  data: ProductAttribute;
+  data: Presentation;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -25,7 +26,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const supabase = useSupabase();
   const { mutateAsync: deletePresentation } = useDeleteMutation(
     supabase.from("presentations"),
-    ["id"]
+    ["id"],
   );
 
   const onConfirm = async () => {

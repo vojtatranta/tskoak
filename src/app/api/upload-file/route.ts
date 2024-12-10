@@ -23,7 +23,7 @@ async function processFile(
   supabase: SupabaseClient<Database>,
   options: {
     presentationTitle?: string;
-  }
+  },
 ) {
   console.log("fileEntity", fileEntity);
 
@@ -49,7 +49,7 @@ async function processFile(
     .eq("uuid", fileEntity.uuid);
 
   const conversionResult = await convertPptxToGoogleSlides(
-    result.googleDriveId
+    result.googleDriveId,
   );
 
   if (!conversionResult.presentationFileId) {
@@ -64,7 +64,7 @@ async function processFile(
     .eq("uuid", fileEntity.uuid);
 
   const presentation = await getPresentation(
-    conversionResult.presentationFileId
+    conversionResult.presentationFileId,
   );
 
   const slidesData = await Promise.all(
@@ -75,8 +75,8 @@ async function processFile(
           .flatMap(
             (element) =>
               element.shape?.text?.textElements?.map(
-                (te) => te.textRun?.content || ""
-              ) ?? []
+                (te) => te.textRun?.content || "",
+              ) ?? [],
           )
           .filter((text) => text); // Remove null/undefined
 
@@ -91,15 +91,15 @@ async function processFile(
       Promise.all([
         getThumbnail(
           String(conversionResult.presentationFileId),
-          String(slide.objectId)
+          String(slide.objectId),
         ),
         getEmbeddings(slide.texts.join(".")),
       ]).then(([{ thumbnailUrl: exportUrl }, vector]) => ({
         ...slide,
         exportUrl,
         vector,
-      }))
-    )
+      })),
+    ),
   );
 
   const allPresentationTexts = slidesData
@@ -108,21 +108,23 @@ async function processFile(
 
   const presentationTextVector = await getEmbeddings(allPresentationTexts);
 
-  const { data: savedPresentation } = await supabase
-    .from("presentations")
-    .insert([
-      {
-        file: fileEntity.id,
-        all_text: allPresentationTexts,
-        title: options.presentationTitle ?? presentation.title,
-        user_id: fileEntity.user_id,
-        vector: presentationTextVector,
-      },
-    ])
-    .select()
-    .single();
+  const { data: savedPresentation, error: presentationSaveError } =
+    await supabase
+      .from("presentations")
+      .insert([
+        {
+          file: fileEntity.id,
+          all_text: allPresentationTexts,
+          title: options.presentationTitle ?? presentation.title,
+          user_id: fileEntity.user_id,
+          text_vector: presentationTextVector as unknown as string,
+        },
+      ])
+      .select()
+      .single();
 
-  if (!savedPresentation) {
+  if (!savedPresentation || presentationSaveError) {
+    console.error("Failed to save presentation", presentationSaveError);
     throw new Error("Failed to save presentation");
   }
 
@@ -135,7 +137,8 @@ async function processFile(
         text: slide.texts.join("."),
         thumbnail_url: slide.exportUrl,
         user_id: fileEntity.user_id,
-      }))
+        text_vector: slide.vector as unknown as string,
+      })),
     )
     .select();
 
@@ -146,7 +149,7 @@ async function processFile(
         .update({
           thumbnail_url: exportUrl,
         })
-        .eq("id", savedPresentation.id)
+        .eq("id", savedPresentation.id),
     )
     .getValue(Promise.resolve({}));
 
@@ -179,7 +182,7 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
@@ -221,7 +224,7 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
@@ -238,6 +241,6 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 }

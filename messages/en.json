@@ -11,6 +11,7 @@
     "answers": "Answers",
     "productAttributes": "Product Attributes",
     "users": "Users",
+    "presentations": "Presentations",
     "account": {
       "title": "Account",
       "profile": "Profile",
@@ -71,7 +72,13 @@
       "goToFirstPage": "Go to first page",
       "goToPreviousPage": "Go to previous page",
       "goToNextPage": "Go to next page",
-      "goToLastPage": "Go to last page"
+      "goToLastPage": "Go to last page",
+      "texts": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "update": "Update",
+        "delete": "Delete"
+      }
     }
   },
   "quiz": {
@@ -402,6 +409,19 @@
     "messages": {
       "updated": "Product attribute updated",
       "deleted": "Product attribute deleted"
+    }
+  },
+  "presentations": {
+    "listing": {
+      "title": "Presentations",
+      "description": "Manage presentations",
+      "addNew": "Add New Presentation",
+      "vectorSearch": "Search by content",
+      "textSearch": "Search by title"
+    },
+    "form": {
+      "title": "Presentation Details",
+      "description": "View presentation details and slides"
     }
   }
 }

@@ -8,29 +8,36 @@ export function useSlidesTableFilters() {
   const [searchQuery, setSearchQuery] = useQueryState(
     "q",
     searchParams.q
-      .withOptions({ shallow: false, throttleMs: 1000 })
-      .withDefault("")
+      .withOptions({ shallow: false, throttleMs: 1500 })
+      .withDefault(""),
+  );
+  const [searchVector, setSearchVector] = useQueryState(
+    "v",
+    searchParams.q
+      .withOptions({ shallow: false, throttleMs: 1500 })
+      .withDefault(""),
   );
 
   const [categoryId, setCategoryId] = useQueryState(
     "categoryId",
-    searchParams.categoryId
+    searchParams.categoryId,
   );
 
   const [page, setPage] = useQueryState(
     "page",
-    searchParams.page.withDefault(1)
+    searchParams.page.withDefault(1),
   );
 
   const resetFilters = useCallback(() => {
     setSearchQuery(null);
     setCategoryId(null);
+    setSearchVector(null);
     setPage(1);
-  }, [setSearchQuery, setCategoryId, setPage]);
+  }, [setSearchQuery, setCategoryId, setSearchVector, setPage]);
 
   const isAnyFilterActive = useMemo(() => {
-    return !!searchQuery || !!categoryId;
-  }, [searchQuery, categoryId]);
+    return !!searchQuery || !!categoryId || !!searchVector;
+  }, [searchQuery, categoryId, searchVector]);
 
   return {
     searchQuery,
@@ -38,6 +45,8 @@ export function useSlidesTableFilters() {
     page,
     setPage,
     resetFilters,
+    searchVector,
+    setSearchVector,
     isAnyFilterActive,
   };
 }

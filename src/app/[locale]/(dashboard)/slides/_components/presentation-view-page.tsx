@@ -16,9 +16,10 @@ export default async function SlideViewPage({
 }) {
   const supabase = await createSupabaseServerClient();
   const presentation = await supabase
-    .from("slides")
+    .from("presentations")
     .select("*")
     .eq("presentation_id", slide.presentation_id)
+    .eq("user_id", user.id)
     .single();
 
   if (!presentation.data) {

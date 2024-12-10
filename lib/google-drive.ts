@@ -2,39 +2,25 @@ import { google } from "googleapis";
 import fs from "fs";
 import path from "path";
 
-// @ts-expect-error: doen't have the declarations
-import { pipeline } from "@xenova/transformers";
+import { Pinecone } from "@pinecone-database/pinecone";
 
-type GenerateEmbedding = (
-  text: string,
-  options?: any
-) => Promise<{ data: Iterable<number> }>;
-
-let generateEmbedding: GenerateEmbedding | null = null;
-
-const getGenerateEmbedding = async (): Promise<GenerateEmbedding> => {
-  if (!generateEmbedding) {
-    generateEmbedding = (await pipeline(
-      "feature-extraction",
-      "Supabase/gte-small"
-    )) as GenerateEmbedding;
-  }
-  return generateEmbedding;
-};
+const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
 
 export const getEmbeddings = async (text: string) => {
-  const embedingCreator = await getGenerateEmbedding();
-  const embeddings = await embedingCreator(text, {
-    pooling: "mean",
-    normalize: true,
+  const model = "multilingual-e5-large";
+
+  const embeddings = await pc.inference.embed(model, [text], {
+    inputType: "passage",
+    truncate: "END",
   });
-  return Array.from(embeddings.data);
+
+  return Array.from(embeddings.data).flatMap((embedding) => embedding.values);
 };
 
 // Path to your service account key file
 const SERVICE_ACCOUNT_FILE = path.join(
   process.cwd(),
-  "./plugs-map-3b0e180f43ce.json"
+  "./plugs-map-3b0e180f43ce.json",
 );
 
 // Authenticate with a service account
@@ -48,7 +34,7 @@ const auth = new google.auth.GoogleAuth({
 
 export async function getThumbnail(
   presentationId: string,
-  pageObjectId: string
+  pageObjectId: string,
 ) {
   try {
     // Request thumbnail for the specific slide
@@ -107,7 +93,7 @@ export async function convertPptxToGoogleSlides(fileId: string) {
 
 export async function uploadPresentation(
   filePath: string,
-  metadata: Record<string, any>
+  metadata: Record<string, any>,
 ) {
   try {
     const fileMetadata = {

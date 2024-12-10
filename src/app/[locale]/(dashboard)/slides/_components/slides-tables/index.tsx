@@ -6,7 +6,6 @@ import { DataTableSearch } from "@/web/components/ui/table/data-table-search";
 import { Slide } from "@/web/lib/supabase-server";
 import { useSlidesColumns } from "./columns";
 import { useSlidesTableFilters } from "./use-presentations-table-filters";
-import { useTranslations } from "next-intl";
 
 export default function SlidesTable({
   data,
@@ -20,6 +19,8 @@ export default function SlidesTable({
     resetFilters,
     searchQuery,
     setPage,
+    setSearchVector,
+    searchVector,
     setSearchQuery,
   } = useSlidesTableFilters();
 
